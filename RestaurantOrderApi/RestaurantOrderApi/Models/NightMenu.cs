@@ -4,8 +4,8 @@ namespace RestaurantOrderApi.Models
 {
     public class NightMenu : MenuBase
     {
-        public NightMenu(string[] orderFields) : base(orderFields)
-        { }
+        public NightMenu() : base() { }
+        public NightMenu(string[] orderFields) : base(orderFields) { }
 
         public override string TimeOfDay => "night";
 

@@ -14,15 +14,19 @@ namespace RestaurantOrderApi.Controllers
 
             if (!string.IsNullOrEmpty(order.Error))
             {
-                ModelState.AddModelError(
-                    nameof(input),
-                    order.Error
-                );
-                return BadRequest(ModelState);
+                return FormBadRequest(nameof(input), order.Error);
             }
 
             return Ok(order.GetOutput());
         }
 
+        private IActionResult FormBadRequest(string key, string error)
+        {
+            ModelState.AddModelError(
+                key,
+                error
+            );
+            return BadRequest(ModelState);
+        }
     }
 }

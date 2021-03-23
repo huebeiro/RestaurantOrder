@@ -15,8 +15,15 @@ namespace RestaurantOrderApi.Models
             OrderDishes = ExtractDishes(orderFields);
         }
 
+        protected MenuBase() { }
+
         private int[] ExtractDishes(string[] orderFields)
         {
+            if(orderFields.Length - DishesInputIndexStart <= 0)
+            {
+                throw new InvalidOperationException("Order has to have at least one item.");
+            }
+
             var strDishes =
                 new string[orderFields.Length - DishesInputIndexStart];
 
