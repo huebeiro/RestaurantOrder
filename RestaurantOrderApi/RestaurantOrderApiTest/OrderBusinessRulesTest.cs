@@ -1,53 +1,29 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RestaurantOrderApi.Models;
+﻿using RestaurantOrderApi.Models;
+using Xunit;
 
 namespace RestaurantOrderApiTest
 {
-    [TestClass]
     public class OrderBusinessRulesTest
     {
-        [TestMethod]
-        public void CaseSensitivityTest()
+        [Theory]
+        [InlineData("MORNING, 1, 2, 3", "eggs, toast, coffee")] //Case sensitivity test
+        [InlineData("morning,1,2   ,3", "eggs, toast, coffee")] //Input trimming test
+        public void OrderOutputTheory(string input, string expectedOutput)
         {
-            Assert.AreEqual(
-                "eggs, toast, coffee",
-                new Order("morning, 1, 2, 3").GetOutput()
+            Assert.Equal(
+                expectedOutput,
+                new Order(input).GetOutput()
             );
         }
 
-        [TestMethod]
-        public void TrimmingTest()
+        [Theory]
+        [InlineData("morning")] //No dishes test
+        [InlineData("afternoon, 1, 2, 3")] //Invalid time of day test
+        [InlineData("")] //Empty input test
+        public void OrderErrorTheory(string input)
         {
-            Assert.AreEqual(
-                "eggs, toast, coffee",
-                new Order("morning,1,2    ,3").GetOutput()
-            );
-        }
-
-        [TestMethod]
-        public void MalformedDishesTest()
-        {
-            Assert.AreNotEqual(
-                string.Empty,
-                new Order("morning, 1, 2,").Error
-            );
-        }
-
-        [TestMethod]
-        public void NoDishesTest()
-        {
-            Assert.AreNotEqual(
-                string.Empty,
-                new Order("morning").Error
-            );
-        }
-
-        [TestMethod]
-        public void InvalidTimeOfDayTest()
-        {
-            Assert.AreNotEqual(
-                string.Empty,
-                new Order("afternoon, 1, 2, 3").Error
+            Assert.NotEmpty(
+                new Order(input).Error
             );
         }
     }
