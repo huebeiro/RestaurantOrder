@@ -1,0 +1,40 @@
+<h1>Restaurant Order App</h1>
+<p>Welcome to Restaurant Order App! Please input an order:</p>
+
+<div>
+  <label class="form-label" for="input">Input: </label>
+  <input class="form-input" type="text" name="input" [(ngModel)]="currentInput" />
+  <br />
+
+  <button class="btn btn-primary full-width" (click)="makeOrder()">Make Order!</button>
+  <br />
+
+  <label class="form-label" for="output">Output: </label>
+  <input class="form-input" type="text" disabled name="output" [(ngModel)]="currentOrder.output" />
+</div>
+
+<br />
+
+<h4> Past Orders </h4>
+
+<table class='table table-striped' aria-labelledby="tableLabel">
+  <thead>
+    <tr>
+      <th>Input</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of pastOrders">
+      <td>{{ order.input }}</td>
+      <td>{{ order.output }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<button class="btn btn-primary pull-right" (click)="clearHistory()">Clear History</button>
+
+
+
+
