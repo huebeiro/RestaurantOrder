@@ -5,11 +5,15 @@ using System.Text;
 
 namespace RestaurantOrderApi.Models
 {
+    /// <summary>
+    /// The base class to represent an available menu
+    /// </summary>
     public abstract class MenuBase
     {
         protected const int DishesInputIndexStart = 1;
         protected const string OutputSeparator = ", ";
         protected const string OutputErrorIndicator = "error";
+
         protected MenuBase(string[] orderFields)
         {
             OrderDishes = ExtractDishes(orderFields);
@@ -45,10 +49,25 @@ namespace RestaurantOrderApi.Models
             return dishes;
         }
 
+        /// <summary>
+        /// The time of day that the dish will be operating
+        /// </summary>
         public abstract string TimeOfDay { get; }
+
+        /// <summary>
+        /// The list of available dishes of the menu
+        /// </summary>
         protected abstract Dish[] AvailableDishes { get; }
+
+        /// <summary>
+        /// The list of dishes in the current order
+        /// </summary>
         protected int[] OrderDishes { get; }
 
+        /// <summary>
+        /// Forms an formatted output based on the inputted order data
+        /// </summary>
+        /// <returns>The formatted order output</returns>
         public string FormOutput()
         {
             StringBuilder output = new StringBuilder();
@@ -58,23 +77,16 @@ namespace RestaurantOrderApi.Models
             {
                 if (!Enum.IsDefined(typeof(DishType), OrderDishes[i])) //Inputted DishType doesn't exist
                 {
-                    output.Append(
-                        OutputErrorIndicator
-                    );
+                    AppendError(output);
                     break;
                 }
 
-                Dish dish =
-                    AvailableDishes
-                        .Where(x => x.Type == (DishType)OrderDishes[i])
-                        .FirstOrDefault();
+                Dish dish = GetDishByDishType((DishType)OrderDishes[i]);
 
                 if (dish == null)
                 {
                     //Current Menu doesn't have the inputted DishType
-                    output.Append(
-                        OutputErrorIndicator
-                    );
+                    AppendError(output);
                     break;
                 }
 
@@ -91,15 +103,11 @@ namespace RestaurantOrderApi.Models
 
                 if (currentDishCount > 0)
                 {
-                    if (!dish.Multipliable) //Verifying if dish can be ordered more than once
+                    if (!dish.IsMultipliable) //Verifying if dish can be ordered more than once
                     {
                         // Same interpolation appends the item name and error indicator
-                        output.Append(
-                            OutputSeparator
-                        );
-                        output.Append(
-                            OutputErrorIndicator
-                        );
+                        AppendSeparator(output);
+                        AppendError(output);
                         break;
                     }
 
@@ -112,13 +120,32 @@ namespace RestaurantOrderApi.Models
 
                 if (i < OrderDishes.Length - 1)
                 {
-                    output.Append( //Appending separator for next item
-                       OutputSeparator
-                    );
+                    AppendSeparator(output);//Appending separator for next item
                 }
             }
 
             return output.ToString();
+        }
+
+        private static void AppendSeparator(StringBuilder output)
+        {
+            output.Append(
+                OutputSeparator
+            );
+        }
+
+        private static void AppendError(StringBuilder output)
+        {
+            output.Append(
+                OutputErrorIndicator
+            );
+        }
+
+        private Dish GetDishByDishType(DishType type)
+        {
+            return AvailableDishes
+                    .Where(x => x.Type == type)
+                    .FirstOrDefault();
         }
     }
 }

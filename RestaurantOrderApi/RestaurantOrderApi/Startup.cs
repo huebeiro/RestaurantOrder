@@ -14,14 +14,22 @@ namespace RestaurantOrderApi
         }
 
         public IConfiguration Configuration { get; }
+        
+        private readonly string CorsPolicyName = "CorsPolicyAllowAll"; //Just a name for the CORS policy to be created
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: CorsPolicyName,
+                    builder =>
+                    {
+                        builder.WithOrigins("*"); //CORS Is necessary for RestaurantOrderApp calls 
+                    });
+            });
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -32,6 +40,8 @@ namespace RestaurantOrderApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(CorsPolicyName); //Applying the created CORS policy
 
             app.UseAuthorization();
 

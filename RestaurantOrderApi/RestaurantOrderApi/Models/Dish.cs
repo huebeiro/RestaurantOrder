@@ -9,11 +9,20 @@ namespace RestaurantOrderApi.Models
         {
             Type = type;
             Name = name;
-            Multipliable = multipliable;
+            IsMultipliable = multipliable;
         }
 
+        /// <summary>
+        /// The type of the dish
+        /// </summary>
         public DishType Type { get; }
+        /// <summary>
+        /// The name of the dish
+        /// </summary>
         public string Name { get; }
-        public bool Multipliable { get; }
+        /// <summary>
+        /// Flag to indicate whether or not a dish can be ordered more than once
+        /// </summary>
+        public bool IsMultipliable { get; } 
     }
 }

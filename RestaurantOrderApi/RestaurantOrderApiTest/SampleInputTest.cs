@@ -18,7 +18,7 @@ namespace RestaurantOrderApiTest
         {
             Assert.Equal(
                 expectedOutput,
-                new Order(input).GetOutput()
+                new Order(input).Output
             );
         }
     }

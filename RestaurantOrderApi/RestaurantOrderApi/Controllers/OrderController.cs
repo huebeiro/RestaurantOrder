@@ -17,7 +17,7 @@ namespace RestaurantOrderApi.Controllers
                 return FormBadRequest(nameof(input), order.Error);
             }
 
-            return Ok(order.GetOutput());
+            return Ok(order);
         }
 
         private IActionResult FormBadRequest(string key, string error)

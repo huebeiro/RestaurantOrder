@@ -1,5 +1,8 @@
 ﻿namespace RestaurantOrderApi.Models
 {
+    /// <summary>
+    /// Class to process order inputs into fields
+    /// </summary>
     public class Input
     {
         private const char Separator = ','; //Rule #2 does not specify input separator will have spaces
@@ -13,6 +16,9 @@
             }
         }
 
+        /// <summary>
+        /// The fields of the inputted string
+        /// </summary>
         public string[] Fields;
     }
 }
